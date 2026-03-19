@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-inter: "Inter", system-ui, sans-serif;
+  --font-outfit: "Outfit", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #08080f;
+  color: #e2e8f0;
+  font-family: var(--font-inter);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0f0f1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e1e32;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #7c3aed;
+}
+
+/* Glass morphism utility */
+@layer components {
+  .glass {
+    background: rgba(19, 19, 31, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(30, 30, 50, 0.8);
+  }
+
+  .glass-hover {
+    transition: all 0.2s ease;
+  }
+
+  .glass-hover:hover {
+    background: rgba(30, 30, 50, 0.8);
+    border-color: rgba(124, 58, 237, 0.4);
+  }
+
+  .glow-text-violet {
+    text-shadow: 0 0 30px rgba(124, 58, 237, 0.6);
+  }
+
+  .glow-text-cyan {
+    text-shadow: 0 0 20px rgba(34, 211, 238, 0.5);
+  }
+
+  .chip-selected {
+    background: rgba(124, 58, 237, 0.25);
+    border-color: rgba(124, 58, 237, 0.7);
+    color: #c4b5fd;
+    box-shadow: 0 0 12px rgba(124, 58, 237, 0.2);
+  }
+
+  .chip-base {
+    background: rgba(19, 19, 31, 0.8);
+    border: 1px solid #1e1e32;
+    color: #94a3b8;
+    transition: all 0.15s ease;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .chip-base:hover {
+    border-color: rgba(124, 58, 237, 0.4);
+    color: #e2e8f0;
+  }
+
+  .shimmer-bg {
+    background: linear-gradient(
+      90deg,
+      rgba(19, 19, 31, 0.8) 0%,
+      rgba(30, 30, 50, 0.9) 50%,
+      rgba(19, 19, 31, 0.8) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.8s linear infinite;
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Ambient background blobs */
+.ambient-blob {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
