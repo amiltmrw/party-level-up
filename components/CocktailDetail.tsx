@@ -68,13 +68,19 @@ export default function CocktailDetail({ cocktail, onClose }: CocktailDetailProp
 
       {/* Panel */}
       <div className="relative w-full sm:max-w-2xl max-h-[95vh] sm:max-h-[90vh] glass rounded-t-3xl sm:rounded-3xl border border-brand-border overflow-hidden flex flex-col animate-in slide-in-from-bottom duration-300">
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-brand-surface/80 border border-brand-border text-brand-muted hover:text-brand-text hover:border-brand-violet/40 transition-all"
-        >
-          <X size={16} />
-        </button>
+        {/* Sticky top bar with drag handle + close */}
+        <div className="sticky top-0 z-20 flex items-center justify-between px-4 pt-3 pb-2 bg-brand-card/80 backdrop-blur-md border-b border-brand-border/50 shrink-0">
+          <div className="flex-1 flex justify-center sm:hidden">
+            <div className="w-10 h-1 rounded-full bg-brand-muted/40" />
+          </div>
+          <button
+            onClick={onClose}
+            className="absolute right-3 top-2.5 w-9 h-9 flex items-center justify-center rounded-full bg-brand-surface border border-brand-border text-brand-muted hover:text-brand-text hover:border-brand-violet/40 transition-all"
+            aria-label="Close"
+          >
+            <X size={18} />
+          </button>
+        </div>
 
         {/* Scrollable content */}
         <div className="overflow-y-auto flex-1">
