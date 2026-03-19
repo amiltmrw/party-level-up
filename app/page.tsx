@@ -50,6 +50,7 @@ export default function HomePage() {
   const [selectedCocktail, setSelectedCocktail] = useState<CocktailRecipe | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [generatingMessage, setGeneratingMessage] = useState(GENERATING_MESSAGES[0]);
+  const [loadingMore, setLoadingMore] = useState(false);
 
   const totalSelected = selectedLiquors.length + selectedMixers.length + selectedExtras.length;
 
@@ -132,6 +133,51 @@ export default function HomePage() {
     setCocktails([]);
     setError(null);
   }, []);
+
+  const generateMore = async () => {
+    setLoadingMore(true);
+    setError(null);
+    try {
+      const liquorNames = selectedLiquors.map((id) => LIQUORS.find((l) => l.id === id)?.name ?? id);
+      const mixerNames = selectedMixers.map((id) => MIXERS.find((m) => m.id === id)?.name ?? id);
+      const extraNames = selectedExtras.map((id) => EXTRAS.find((e) => e.id === id)?.name ?? id);
+      const excludeNames = cocktails.map((c) => c.name);
+
+      const genRes = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ liquors: liquorNames, mixers: mixerNames, extras: extraNames, excludeNames }),
+      });
+
+      if (!genRes.ok) {
+        const err = await genRes.json();
+        const errMsg = err.error ?? "Failed to generate cocktails.";
+        if (genRes.status === 429) throw new Error("quota: " + errMsg);
+        throw new Error(errMsg);
+      }
+
+      const { cocktails: newCocktails }: { cocktails: CocktailRecipe[] } = await genRes.json();
+
+      const withImages = newCocktails.map((c) => ({
+        ...c,
+        imageUrl: buildImageUrl(c.imagePrompt, c.id),
+        fallbackImageUrl: getFallbackFromIngredients(
+          c.ingredients.map((ing) => ing.name)
+        ),
+      }));
+
+      setCocktails((prev) => [...prev, ...withImages]);
+    } catch (err) {
+      const errMsg = err instanceof Error ? err.message : "Something went wrong.";
+      if (errMsg.includes("quota") || errMsg.includes("rate") || errMsg.includes("429")) {
+        setError("Rate limit reached. Please wait a moment and try again.");
+      } else {
+        setError(errMsg);
+      }
+    } finally {
+      setLoadingMore(false);
+    }
+  };
 
   const isWizardStep = step === 1 || step === 2 || step === 3;
   const stepIndex = isWizardStep ? (step as number) - 1 : 0;
@@ -266,6 +312,8 @@ export default function HomePage() {
             cocktails={cocktails}
             onSelectCocktail={setSelectedCocktail}
             onStartOver={handleStartOver}
+            onGenerateMore={generateMore}
+            loadingMore={loadingMore}
           />
         )}
       </div>

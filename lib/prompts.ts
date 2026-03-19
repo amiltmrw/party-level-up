@@ -1,14 +1,22 @@
 import type { SelectionState } from "@/types";
 
-export function buildCocktailPrompt(selection: SelectionState): string {
+export function buildCocktailPrompt(
+  selection: SelectionState,
+  excludeNames?: string[]
+): string {
   const { liquors, mixers, extras } = selection;
+
+  const excludeBlock =
+    excludeNames && excludeNames.length > 0
+      ? `\n\nIMPORTANT: The following cocktails have already been suggested. Do NOT repeat any of them or create similar variations. Come up with completely different recipes:\n${excludeNames.map((n) => `- ${n}`).join("\n")}\n`
+      : "";
 
   return `You are an expert mixologist and cocktail consultant. A party host has the following ingredients available at home:
 
 **Alcoholic Spirits/Liquors:** ${liquors.join(", ")}
 **Mixers & Non-alcoholic:** ${mixers.join(", ")}
 **Fruits, Herbs, Spices & Extras:** ${extras.join(", ")}
-
+${excludeBlock}
 Based ONLY on these available ingredients, create exactly 6 unique and exciting cocktail recipes. The cocktails should range from classic to creative, and at least 2 should be visually impressive or Instagram-worthy. Include at least 1 easy beginner cocktail.
 
 Return ONLY valid JSON in this exact format (no markdown, no explanation, just raw JSON):

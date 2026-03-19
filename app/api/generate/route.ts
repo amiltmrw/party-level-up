@@ -5,8 +5,8 @@ import type { SelectionState, GenerateResponse } from "@/types";
 
 export async function POST(req: NextRequest) {
   try {
-    const body: SelectionState = await req.json();
-    const { liquors, mixers, extras } = body;
+    const body = await req.json();
+    const { liquors, mixers, extras, excludeNames } = body as SelectionState & { excludeNames?: string[] };
 
     if (!liquors?.length && !mixers?.length && !extras?.length) {
       return NextResponse.json(
@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const prompt = buildCocktailPrompt({ liquors, mixers, extras });
+    const prompt = buildCocktailPrompt({ liquors, mixers, extras }, excludeNames);
     const groq = getGroqClient();
 
     const completion = await groq.chat.completions.create({
