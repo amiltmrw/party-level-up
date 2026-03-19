@@ -69,17 +69,17 @@ const DEFAULT_GLASS = "coupe";
 export function getFallbackImage(selectedAlcoholIds: string[]): string {
   for (const id of selectedAlcoholIds) {
     const glass = ALCOHOL_TO_GLASS[id];
-    if (glass) return `/fallbacks/${glass}.png`;
+    if (glass) return `/fallbacks/${glass}.webp`;
   }
-  return `/fallbacks/${DEFAULT_GLASS}.png`;
+  return `/fallbacks/${DEFAULT_GLASS}.webp`;
 }
 
 export function getFallbackFromIngredients(ingredientNames: string[]): string {
   for (const name of ingredientNames) {
     const lower = name.toLowerCase();
     for (const [key, glass] of Object.entries(NAME_TO_GLASS)) {
-      if (lower.includes(key)) return `/fallbacks/${glass}.png`;
+      if (lower.includes(key)) return `/fallbacks/${glass}.webp`;
     }
   }
-  return `/fallbacks/${DEFAULT_GLASS}.png`;
+  return `/fallbacks/${DEFAULT_GLASS}.webp`;
 }
