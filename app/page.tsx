@@ -32,6 +32,14 @@ const STEP_META = [
   { title: "Fruits, Herbs & Extras", subtitle: "Garnishes and flavour boosters." },
 ];
 
+function buildImageUrl(prompt: string, seed: string): string {
+  const shortened = (prompt || "cocktail").slice(0, 200);
+  const encoded = encodeURIComponent(
+    `${shortened}, cocktail photo, dark bar, neon lighting, photorealistic`
+  );
+  return `https://image.pollinations.ai/prompt/${encoded}?width=512&height=512&model=turbo&nologo=true&seed=${encodeURIComponent(seed)}`;
+}
+
 export default function HomePage() {
   const [step, setStep] = useState<AppStep>(1);
   const [selectedLiquors, setSelectedLiquors] = useState<string[]>([]);
@@ -90,10 +98,16 @@ export default function HomePage() {
       }
 
       const { cocktails: generatedCocktails }: { cocktails: CocktailRecipe[] } = await genRes.json();
-      setCocktails(generatedCocktails);
+
+      // Attach Pollinations image URLs directly — browser loads them natively
+      const withImages = generatedCocktails.map((c) => ({
+        ...c,
+        imageUrl: buildImageUrl(c.imagePrompt, c.id),
+      }));
+
+      setCocktails(withImages);
       clearInterval(msgInterval);
       setStep("results");
-      generateImages(generatedCocktails);
     } catch (err) {
       clearInterval(msgInterval);
       const errMsg = err instanceof Error ? err.message : "Something went wrong.";
@@ -103,24 +117,6 @@ export default function HomePage() {
         setError(errMsg);
       }
       setStep(3);
-    }
-  };
-
-  const generateImages = async (cocktailList: CocktailRecipe[]) => {
-    for (const cocktail of cocktailList) {
-      try {
-        const res = await fetch("/api/image", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ prompt: cocktail.imagePrompt, cocktailId: cocktail.id }),
-        });
-        if (!res.ok) continue;
-        const { imageUrl } = await res.json();
-        if (imageUrl) {
-          setCocktails((prev) => prev.map((c) => (c.id === cocktail.id ? { ...c, imageUrl } : c)));
-          setSelectedCocktail((prev) => prev?.id === cocktail.id ? { ...prev, imageUrl } : prev);
-        }
-      } catch { /* silently skip */ }
     }
   };
 
@@ -178,7 +174,6 @@ export default function HomePage() {
         {/* Step card */}
         {isWizardStep && (
           <div className="glass rounded-2xl border border-brand-border p-5">
-            {/* Step heading */}
             <div className="mb-5 pb-4 border-b border-brand-border/50">
               <div className="flex items-center gap-2 mb-1">
                 <span className="w-1 h-5 rounded-full bg-brand-violet inline-block" />
@@ -301,7 +296,6 @@ export default function HomePage() {
             </button>
           </div>
 
-          {/* Inline hint */}
           {step === 1 && selectedLiquors.length === 0 && (
             <p className="text-center text-[11px] text-brand-muted mt-2">Select at least one spirit to continue</p>
           )}
