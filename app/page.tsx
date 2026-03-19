@@ -186,7 +186,16 @@ export default function HomePage() {
     <div className="min-h-screen flex flex-col max-w-lg mx-auto w-full">
 
       {/* ── TOP HEADER ── */}
-      <header className="px-5 pt-10 pb-2 text-center">
+      <header className="px-5 pt-10 pb-2 text-center relative">
+        {step === "results" && (
+          <button
+            onClick={() => { setStep(3); setCocktails([]); }}
+            className="absolute left-4 top-10 w-9 h-9 flex items-center justify-center rounded-full border border-brand-border text-brand-muted hover:text-brand-text hover:border-brand-violet/40 transition-all"
+            aria-label="Back to ingredients"
+          >
+            <ArrowLeft size={16} />
+          </button>
+        )}
         <div className="inline-flex items-center gap-2.5">
           <span className="text-2xl">🍹</span>
           <h1 className="font-display text-2xl text-brand-text tracking-wide">
