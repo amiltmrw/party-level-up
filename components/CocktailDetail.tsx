@@ -94,7 +94,15 @@ export default function CocktailDetail({ cocktail, onClose }: CocktailDetailProp
                 className={`w-full h-full object-cover transition-opacity duration-500 ${imgLoaded ? "opacity-100" : "opacity-0"}`}
               />
             )}
-            {imgError && (
+            {imgError && cocktail.fallbackImageUrl && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={cocktail.fallbackImageUrl}
+                alt={cocktail.name}
+                className="w-full h-full object-cover"
+              />
+            )}
+            {imgError && !cocktail.fallbackImageUrl && (
               <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-brand-surface to-brand-card">
                 <Wine size={60} className="text-brand-violet/30" />
               </div>

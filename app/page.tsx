@@ -15,6 +15,7 @@ import {
   TOP_EXTRAS,
 } from "@/lib/ingredients";
 import type { CocktailRecipe } from "@/types";
+import { getFallbackFromIngredients } from "@/lib/fallbacks";
 
 type AppStep = 1 | 2 | 3 | "generating" | "results";
 
@@ -103,6 +104,9 @@ export default function HomePage() {
       const withImages = generatedCocktails.map((c) => ({
         ...c,
         imageUrl: buildImageUrl(c.imagePrompt, c.id),
+        fallbackImageUrl: getFallbackFromIngredients(
+          c.ingredients.map((ing) => ing.name)
+        ),
       }));
 
       setCocktails(withImages);

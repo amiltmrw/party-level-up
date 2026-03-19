@@ -27,13 +27,11 @@ export default function CocktailCard({ cocktail, onClick }: CocktailCardProps) {
       {/* Image area */}
       <div className="relative w-full aspect-square overflow-hidden bg-brand-surface">
 
-        {/* Shimmer skeleton — shown until image loads */}
-        {(!cocktail.imageUrl || !loaded) && !imgError && (
+        {!loaded && !imgError && (
           <div className="absolute inset-0 shimmer-bg" />
         )}
 
-        {/* Actual image */}
-        {cocktail.imageUrl && !imgError && (
+        {!imgError && cocktail.imageUrl && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={cocktail.imageUrl}
@@ -47,7 +45,15 @@ export default function CocktailCard({ cocktail, onClick }: CocktailCardProps) {
           />
         )}
 
-        {/* Difficulty badge */}
+        {imgError && cocktail.fallbackImageUrl && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={cocktail.fallbackImageUrl}
+            alt={cocktail.name}
+            className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
+          />
+        )}
+
         <div className="absolute top-3 right-3">
           <span
             className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold border backdrop-blur-sm ${

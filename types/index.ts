@@ -20,6 +20,7 @@ export interface CocktailRecipe {
   tips?: string;
   imagePrompt: string;
   imageUrl?: string;
+  fallbackImageUrl?: string;
   flavourProfile: string[];
 }
 
