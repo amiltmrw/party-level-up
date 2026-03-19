@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// Tell Next.js this route can run longer than the default 10s
-export const maxDuration = 60;
+export const maxDuration = 10;
 
 const POLLINATIONS_BASE = "https://image.pollinations.ai/prompt";
 
@@ -21,7 +20,7 @@ export async function POST(req: NextRequest) {
 
     // Fetch the image server-side — avoids CORS and browser timeout issues
     const response = await fetch(url, {
-      signal: AbortSignal.timeout(40000), // 40 second timeout
+      signal: AbortSignal.timeout(9000),
     });
 
     if (!response.ok) {
