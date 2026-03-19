@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Bungee } from "next/font/google";
 import "./globals.css";
 
@@ -14,6 +14,13 @@ const bungee = Bungee({
   variable: "--font-bungee",
   display: "swap",
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
 
 export const metadata: Metadata = {
   title: "Party Level Up — AI Cocktail Creator",

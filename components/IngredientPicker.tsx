@@ -114,7 +114,7 @@ export default function IngredientPicker({
           placeholder={`Search ${title.toLowerCase()}...`}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className={`w-full bg-brand-surface border border-brand-border rounded-xl pl-10 pr-9 py-2.5 text-sm text-brand-text placeholder:text-brand-muted outline-none transition-colors ${style.searchFocus}`}
+          className={`w-full bg-brand-surface border border-brand-border rounded-xl pl-10 pr-9 py-2.5 text-base sm:text-sm text-brand-text placeholder:text-brand-muted outline-none transition-colors ${style.searchFocus}`}
         />
         {query && (
           <button
